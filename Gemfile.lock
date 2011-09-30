@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    fast_change_table (0.0.1)
+      activerecord (~> 2.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activerecord (2.3.14)
+      activesupport (= 2.3.14)
+    activesupport (2.3.14)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  fast_change_table!

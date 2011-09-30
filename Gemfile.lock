@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    fast_change_table (0.0.1)
+    fast_change_table (0.0.2)
       activerecord (~> 2.3)
 
 GEM

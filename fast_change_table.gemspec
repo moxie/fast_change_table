@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = FastChangeTable::VERSION
   s.authors     = ["Grady Griffin"]
   s.email       = ["gradyg@izea.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/moxie/fast_change_table"
   s.summary     = %q{Faster table changes}
   s.description = %q{Uses table duplication to speed up migrations on large tables}
 

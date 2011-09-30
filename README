@@ -1,0 +1,5 @@
+Use fast_change_table instead of change_table in your migrations on large tables of data. Uses a duplication pattern to speed things up.
+
+# Known issues
+- Probably only works with MySQL
+- Not tested

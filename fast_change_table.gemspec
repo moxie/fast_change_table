@@ -5,11 +5,11 @@ require "fast_change_table/version"
 Gem::Specification.new do |s|
   s.name        = "fast_change_table"
   s.version     = FastChangeTable::VERSION
-  s.authors     = ["Joe Peduto"]
-  s.email       = ["joey@izea.com"]
+  s.authors     = ["Grady Griffin"]
+  s.email       = ["gradyg@izea.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Faster table changes}
+  s.description = %q{Uses table duplication to speed up migrations on large tables}
 
   s.rubyforge_project = "fast_change_table"
 

@@ -11,8 +11,7 @@ module FastChangeTable
       old_table_name = "old_#{table_name}"
       rename_table(table_name, old_table_name)
       begin
-         execute "CREATE TABLE #{table_name} LIKE #{old_table_name}" 
-         change_table(table_name, &block)
+         create_table_like(old_table_name, table_name, &block)
          #prepare the columns names for the insert statements
          old = connection.columns(old_table_name).collect(&:name)
          current = connection.columns(table_name).collect(&:name)
@@ -24,6 +23,25 @@ module FastChangeTable
          drop_table(table_name) if table_exists?(table_name)
          rename_table(old_table_name, table_name)
       end
+    end
+    
+    def self.create_table_like(like_table, table, &blk)
+      code = table_schema_code(like_table)
+      code.gsub!(/create_table\s+"#{like_table}"/, "create_table :#{table}")
+      code.gsub!(/add_index\s+"#{like_table}"/, "add_index :#{table}")
+      class_eval(code)
+      change_table(table, &blk) if blk
+      true
+    end
+
+    private
+
+    def self.table_schema_code(table)
+      dumper = ActiveRecord::SchemaDumper.send(:new, connection)
+      stream = StringIO.new
+      dumper.table(table.to_s,stream)
+      stream.rewind
+      code = stream.read
     end
   end
 end

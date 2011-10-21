@@ -61,7 +61,7 @@ module FastChangeTable
         options[:name]    = i.name    if i.name
         options[:length]  = i.lengths if i.lengths
         options[:unique]  = i.unique  if i.unique
-        add_index table, i.columns, :name => i.name
+        add_index table, i.columns, options
       end
     end
   end

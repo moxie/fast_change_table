@@ -27,3 +27,14 @@ fast_add_indexes(table, &block)
     t.index :some_column
     t.index [:some_other_column, :column_three], :name => "a_multicolumn_index"
   end
+  
+copy_table(from_table, to_table, remaps = [])
+  copies rows from one table into another.  this probably only works with Mysql.
+  by default copies data from column of from_table to to_table of same name.
+  will not copy data where there is no corresponding column.
+  the remaps argument can be supplied to tell copy table how to handle unmatched columns or override this behavior
+  examples
+  
+  copy_table(old_users_without_email_hash, new_table, ['MD5(email)', 'email_hash'])
+  
+  copy_table(old_users_without_total, new_table, ['sum(payments)', 'total_payments'])

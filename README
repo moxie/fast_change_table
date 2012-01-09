@@ -3,3 +3,27 @@ Use fast_change_table instead of change_table in your migrations on large tables
 # Known issues
 - Probably only works with MySQL
 - Not tested
+
+uses ordinary change_table syntax but adds two options
+- "replace_keys" to remove all indexes; new indexes will be specified
+- "disable_keys" to remove indexes and apply them after data load; this is a tremendous performance enhancement for a dbms with fast index creation
+
+other methods:
+
+create_table_like(orignal_table, table_to_copy_to)
+  creates a table with the same structure
+  
+disable_indexes(table)
+  removes all indexes from a table, returns a list of index objects removed
+  
+enable_indexes(table, list_of_indexes)
+  restores a list of indexes to a table
+  
+fast_add_indexes(table, &block)
+  allows you to pass a block to add indexes.  For mysql creates specified indexes in one statement; allows the data to be scanned once.
+  example
+  
+  fast_add_indexes :sometable do |t|
+    t.index :some_column
+    t.index [:some_other_column, :column_three], :name => "a_multicolumn_index"
+  end

@@ -1,16 +1,6 @@
 module ActiveRecord
   module ConnectionAdapters #:nodoc:
     
-    class MysqlAdapter < AbstractAdapter
-      def tables_without_views(name = nil) #:nodoc:
-        tables = []
-        result = execute("SHOW FULL TABLES WHERE Table_type = 'BASE TABLE'", name)
-        result.each { |field| tables << field[0] }
-        result.free
-        tables
-      end
-    end
-    
     module SchemaStatements
       def change_table_with_remaps(table_name)
         t = Table.new(table_name, self)
@@ -104,17 +94,11 @@ module FastChangeTable
       to_columns_to_s   = to_columns.join(', ')
       execute "INSERT INTO #{to}(#{to_columns_to_s}) SELECT #{from_columns_to_s} FROM #{from}"
     end
-    
-    def create_table(table_name, options = {})
-      rtn = super
-      execute "alter table `#{table_name}` row_format=dynamic" if connection.adapter_name =~ /^mysql/i
-      rtn
-    end
 
     def table_schema_code(table)
       dumper = ActiveRecord::SchemaDumper.send(:new, connection)
       stream = StringIO.new
-      dumper.table(table.to_s,stream)
+      dumper.send(:table, table.to_s, stream)
       stream.rewind
       code = stream.read
     end
@@ -122,33 +106,20 @@ module FastChangeTable
     #removes all the indexes 
     def disable_indexes(table)
       list = connection.indexes(table)
-      if connection.adapter_name =~ /^mysql/i
-        sql = list.collect { |i| "DROP INDEX #{i.name}"}.join(', ')
-        execute "ALTER TABLE #{table} #{sql}"
-      else
-        list.each do |i|
-          remove_index table, :name => i.name
-        end
-      end  
+      list.each do |i|
+        remove_index table, :name => i.name
+      end
       list
     end
 
     #
     def enable_indexes(table, list)
-      if connection.adapter_name =~ /^mysql/i
-        sql = list.collect do |i|
-          cols = i.columns.collect {|c| i.lengths ? "`#{c}`(#{i.lengths[c]})" : "`#{c}`"}.join(',')
-          "ADD #{'UNIQUE ' if i.unique}INDEX #{i.name} (#{cols})"
-        end.join(', ')
-        execute "ALTER TABLE #{table} #{sql}"
-      else
-        list.each do |i|
-          options = {}
-          options[:name]    = i.name    if i.name
-          options[:length]  = i.lengths if i.lengths
-          options[:unique]  = i.unique  if i.unique
-          add_index table, i.columns, options
-        end
+      list.each do |i|
+        options = {}
+        options[:name]    = i.name    if i.name
+        options[:length]  = i.lengths if i.lengths
+        options[:unique]  = i.unique  if i.unique
+        add_index table, i.columns, options
       end
       true
     end

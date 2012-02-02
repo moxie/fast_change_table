@@ -21,7 +21,9 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     s.add_runtime_dependency('activerecord', '>= 2.3')
+    s.add_development_dependency("rspec")
   else
     s.add_dependency('activerecord', '>= 2.3')
+    s.add_development_dependency("rspec")
   end
 end

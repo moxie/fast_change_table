@@ -22,8 +22,10 @@ Gem::Specification.new do |s|
   if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     s.add_runtime_dependency('activerecord', '>= 2.3')
     s.add_development_dependency("rspec")
+    s.add_development_dependency("mysql2")
   else
     s.add_dependency('activerecord', '>= 2.3')
     s.add_development_dependency("rspec")
+    s.add_development_dependency("mysql2")
   end
 end

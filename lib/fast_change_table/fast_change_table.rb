@@ -13,10 +13,10 @@ module FastChangeTable
       begin
        create_table_like(old_table_name, table_name, options)
        renamed_columns = change_table_with_remaps(table_name, &block)
-       index_list = options[:disable_keys]  ? disable_indexes(table_name) : []
+       index_list = options[:disable_keys] == false  ? [] : disable_indexes(table_name)
        #prepare the columns names for the insert statements
        copy_table(old_table_name, table_name, renamed_columns)
-       enable_indexes(table_name, index_list) if options[:disable_keys]
+       enable_indexes(table_name, index_list) unless options[:disable_keys] == false
        drop_table(old_table_name)
       rescue Exception => e
         puts "#{e}\n#{e.backtrace}"

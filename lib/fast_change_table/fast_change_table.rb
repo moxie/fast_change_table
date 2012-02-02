@@ -76,13 +76,8 @@ module FastChangeTable
     #removes all the indexes 
     def disable_indexes(table)
       list = connection.indexes(table)
-      if connection.adapter_name =~ /^mysql/i
-        sql = list.collect { |i| "DROP INDEX #{i.name}"}.join(', ')
-        execute "ALTER TABLE #{table} #{sql}"
-      else
-        list.each do |i|
-          remove_index table, :name => i.name
-        end
+      list.each do |i|
+        remove_index table, :name => i.name
       end
       list
     end
